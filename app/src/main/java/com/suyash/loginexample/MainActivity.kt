@@ -1,7 +1,9 @@
 package com.suyash.loginexample
 
 
+import android.content.Intent
 import android.os.Bundle
+import android.widget.Button
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -13,8 +15,10 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.clevertap.android.sdk.CleverTapAPI
+import com.suyash.loginexample.ui.CameraActivity
 import com.suyash.loginexample.ui.LoginScreen
+import com.suyash.loginexample.ui.ReadingsListActivity
+import com.suyash.loginexample.ui.ReportActivity
 import com.suyash.loginexample.ui.theme.LoginExampleTheme
 
 
@@ -22,30 +26,21 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        setContentView(R.layout.activity_main)
 
-        CleverTapAPI.setDebugLevel(CleverTapAPI.LogLevel.DEBUG);
+        setupClickListeners()
+    }
+    private fun setupClickListeners() {
+        findViewById<Button>(R.id.btn_capture).setOnClickListener {
+            startActivity(Intent(this, CameraActivity::class.java))
+        }
 
-        setContent {
-            LoginExampleTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    val navController = rememberNavController()
-                    NavHost(navController = navController, startDestination = "login") {
-                        composable("login") {
-                            LoginScreen(navController)
-                        }
-                        composable("signup") {
-                            // Your signup screen
-                        }
-                        composable("home") {
-                            // Your home screen
-                            Text("Home Screen")
-                        }
-                    }
-                }
-            }
+        findViewById<Button>(R.id.btn_readings).setOnClickListener {
+            startActivity(Intent(this, ReadingsListActivity::class.java))
+        }
+
+        findViewById<Button>(R.id.btn_report).setOnClickListener {
+            startActivity(Intent(this, ReportActivity::class.java))
         }
     }
 }
