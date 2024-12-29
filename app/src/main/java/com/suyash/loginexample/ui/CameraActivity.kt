@@ -13,6 +13,7 @@ import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
+import androidx.camera.view.PreviewView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
@@ -33,11 +34,13 @@ class CameraActivity : AppCompatActivity() {
     private lateinit var preview: Preview
     private lateinit var imageCapture: ImageCapture
     private lateinit var outputDirectory: File
+    private lateinit var viewFinder: PreviewView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_camera)
 
+        viewFinder = findViewById(R.id.viewFinder)
         outputDirectory = getOutputDirectory()
         // Request camera permissions
         if (allPermissionsGranted()) {
@@ -83,6 +86,7 @@ class CameraActivity : AppCompatActivity() {
             cameraProvider = cameraProviderFuture.get()
 
             preview = Preview.Builder().build()
+                .also { it.setSurfaceProvider(viewFinder.surfaceProvider) }
             imageCapture = ImageCapture.Builder()
                 .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
                 .build()
